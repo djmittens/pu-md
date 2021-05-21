@@ -1,0 +1,21 @@
+@startuml File Processing
+start
+:Find all files;
+:Generate mapping;
+:Validate entries in the mapping;
+note right
+    * Check for file extensions, 
+        eg only support png (or svg), and *.pu / *.puml
+    * Check if the folders exist, if not create them.
+end note
+while (foreach file mapping)
+    :Pipe file through plantuml;
+    :Report status;
+    note right
+        Figure out how to report an error, if there is one
+        stderr ? stdout ?
+    end note
+end while
+
+stop
+@enduml
