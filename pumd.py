@@ -2,11 +2,19 @@ import re
 import sys
 from pathlib import PurePath
 from sh import rg, cat, java, ErrorReturnCode_2, ErrorReturnCode_1
+# TODO: Create ci pipeline, and publish an artifact to github
 # TODO: Add argparse library
 # TODO: Add logging library
-# TODO: Fix a bug where the directory path must exist or somethign.
 # TODO: Think through how i want to handle doc root. (eg what to treat as the root of the documentation)
 # TODO: Multiplex plantuml file processing.
+# TODO: add assertions on the files being present in the right location.
+# BUG: Fix a bug where the directory path must exist or somethign.
+# BUG: Scans all files in the directory, add feature to support filtering only files in the staged changeset.
+# BUG: Relative paths can point to a folder not included in the mount.
+# cat: can't open '/app/<!-- ./diagram.pu': No such file or directory
+# Generating diagram /app/app.pu => /app/diagram.png
+# Generating diagram /app/<!-- ./diagram.pu => /app/assets/diagram.svg -->
+# BUG: Filetypes are not properly parsed, eg `.svg` extension produces a `png` file.
 
 reg = re.compile('(.+):(.+)')
 
@@ -45,7 +53,7 @@ if __name__ == "__main__":
         files = find_all_files()
         for src, dsts in files.items():
             for dst in dsts:
-                gen_image(full_source_path(src, dst[0]),full_source_path(src, dst[1]))
+                gen_image(full_source_path(src, dst[0]),full_source_path(src, '/app/' + dst[1]))
     except(ErrorReturnCode_1):
         print("Something went wrong with rg or something")
         pass
